@@ -8,13 +8,15 @@ function App() {
   const { open } = useWeb3Modal();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
-
+  
+  console.log('Log - chainId:', chainId)
+  console.log('Log - Number(chainId) !== 43113:', Number(chainId) !== 43113)
   return (
-    <>
+    <div className="bg-black">
       <h1>Vite + React</h1>
       <div className='card'>
         <button className='mr-4 mb-4' onClick={() => (address ? disconnect() : open())}>
-          {address ? address : "Connect Wallet"}
+          {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connect Wallet"}
         </button>
         <button onClick={() => (Number(chainId) !== 43113 ? switchChain({ chainId: 43113 }) : {})}>
           {" "}
@@ -25,7 +27,7 @@ function App() {
         </p>
       </div>
       <p className='read-the-docs'>Click on the Vite and React logos to learn more</p>
-    </>
+    </div>
   );
 }
 
