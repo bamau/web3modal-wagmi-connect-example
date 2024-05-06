@@ -1,13 +1,16 @@
+import { getChainId } from '@wagmi/core';
 import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useAccount, useChainId, useDisconnect, useSwitchChain } from "wagmi";
+import { useAccount, useDisconnect, useSwitchChain } from "wagmi";
 import "./App.css";
+import { config } from "./config";
 
 function App() {
   const { address } = useAccount();
-  const chainId = useChainId();
   const { open } = useWeb3Modal();
   const { disconnect } = useDisconnect();
   const { switchChain } = useSwitchChain();
+
+  const chainId = getChainId(config)
 
   console.log("Log - chainId:", chainId);
   console.log("Log - Number(chainId) !== 43113:", Number(chainId) !== 43113);
@@ -18,9 +21,9 @@ function App() {
         <button className='mr-4 mb-4' onClick={() => (address ? disconnect() : open())}>
           {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connect Wallet"}
         </button>
-        <button onClick={() => (Number(chainId) !== 43113 ? switchChain({ chainId: 43113 }) : {})}>
+        <button onClick={() => switchChain({ chainId: Number(chainId) !== 43113 ? 43113 : 43114 })}>
           {" "}
-          {Number(chainId) !== 43113 ? "Switch Chain" : "Correct chain"}{" "}
+          {Number(chainId) !== 43113 ? "Switch Chain 43113" : "Switch chain 43114"}{" "}
         </button>
       </div>
     </div>

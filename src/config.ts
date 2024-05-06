@@ -1,6 +1,6 @@
-// import { avalanche, avalancheFuji } from 'wagmi/chains'
-import { avalanche, avalancheFuji } from '@wagmi/chains'
-import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+
+import { avalanche, avalancheFuji, mainnet } from '@wagmi/chains';
+import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
 
 // Get projectId at https://cloud.walletconnect.com
 export const projectId = '7525b3664a4f27247510d800707affb2'
@@ -16,7 +16,7 @@ const metadata = {
 
 // Create wagmiConfig
 export const config = defaultWagmiConfig({
-  chains: [avalanche, avalancheFuji], // required
+  chains: [mainnet, avalanche, avalancheFuji], // required
   projectId, // required
   metadata, // required
 })
