@@ -19,11 +19,22 @@ export const App = () => {
       console.warn("failed to connect..", err);
     }
   };
+  const disconnect = async () => {
+    try {
+      await sdk?.disconnect();
+      setAccount("");
+    } catch (err) {
+      console.warn("failed to connect..", err);
+    }
+  };
 
   return (
     <div className="App">
       <button style={{ padding: 10, margin: 10 }} onClick={connect}>
         Connect
+      </button>
+      <button style={{ padding: 10, margin: 10 }} onClick={disconnect}>
+        Disconnect
       </button>
       {connected && (
         <div>
