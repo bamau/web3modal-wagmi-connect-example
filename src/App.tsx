@@ -1,38 +1,39 @@
-import { useWeb3Modal } from "@web3modal/wagmi/react";
-import { useAccount, useChainId, useDisconnect } from "wagmi";
-import "./App.css";
+// 
 
-import { switchChain } from '@wagmi/core';
-import { config } from "./config";
 
-function App() {
-  const { address } = useAccount();
-  const { open } = useWeb3Modal();
-  const { disconnect } = useDisconnect();
-  // const { switchChain } = useSwitchChain();
-  const chainId = useChainId()
+import { useSDK } from "@metamask/sdk-react";
+import { useState } from "react";
 
-  // const chainId = getChainId(config)
+export const App = () => {
+  const [account, setAccount] = useState<string>();
+  const { sdk, connected, provider, chainId } = useSDK();
+  console.log('Log - chainId:', chainId)
+  console.log('Log - provider:', provider)
 
-  console.log("Log - chainId:", chainId);
-  console.log("Log - Number(chainId) !== 43113:", Number(chainId) !== 43113);
+  const connect = async () => {
+    try {
+      const accounts = await sdk?.connect();
+      console.log('Log - accounts:', accounts)
+      setAccount(accounts?.[0]);
+    } catch (err) {
+      console.warn("failed to connect..", err);
+    }
+  };
 
-  
   return (
-    <div className='bg-black'>
-      <h1 className='text-white'>Vite + React</h1>
-      <div className='card text-white'>
-        <button className='mr-4 mb-4' onClick={() => (address ? disconnect() : open())}>
-          {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connect Wallet"}
-        </button>
-        <button onClick={async () => await switchChain(config, { chainId: Number(chainId) !== 43113 ? 43113 : 43114 })
-           }>
-          {" "}
-          {Number(chainId) !== 43113 ? "Switch Chain 43113" : "Switch chain 43114"}{" "}
-        </button>
-      </div>
+    <div className="App">
+      <button style={{ padding: 10, margin: 10 }} onClick={connect}>
+        Connect
+      </button>
+      {connected && (
+        <div>
+          <>
+            {chainId && `Connected chain: ${chainId}`}
+            <p></p>
+            {account && `Connected account: ${account}`}
+          </>
+        </div>
+      )}
     </div>
   );
-}
-
-export default App;
+};
