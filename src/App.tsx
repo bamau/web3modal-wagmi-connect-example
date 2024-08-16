@@ -40,6 +40,30 @@ export const App = () => {
     }
   };
 
+  const addEthereumChain = () => {
+    if (!provider) {
+      throw new Error(`invalid ethereum provider`);
+    }
+
+
+    provider
+      .request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: '0x221',
+            chainName: 'Flow testnet',
+            blockExplorerUrls: ['https://evm-testnet.flowscan.io'],
+            nativeCurrency: { symbol: 'FLOW', decimals: 18 },
+            rpcUrls: ['https://testnet.evm.nodes.onflow.org'],
+          },
+        ],
+      })
+      .then((res) => console.log('add', res))
+      .catch((e) => console.log('ADD ERR', e));
+  };
+
+
   return (
     <div className='App'>
       <button style={{ padding: 10, margin: 10 }} onClick={connect}>
@@ -47,6 +71,9 @@ export const App = () => {
       </button>
       <button style={{ padding: 10, margin: 10 }} onClick={disconnect}>
         Disconnect
+      </button>
+      <button style={{ padding: 10, margin: 10 }} onClick={addEthereumChain}>
+        Add chain Flow
       </button>
       {Number(chainId) !== 545 && (
         <button style={{ padding: 10, margin: 10 }} onClick={() => changeNetwork("0x221")}>
