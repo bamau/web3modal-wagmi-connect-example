@@ -1,27 +1,19 @@
-//
-
 import { useSDK } from "@metamask/sdk-react";
-import { useState } from "react";
 
 export const App = () => {
-  const [account, setAccount] = useState<string>();
-  const { sdk, connected, provider, chainId } = useSDK();
-  console.log("Log - chainId:", chainId);
-  console.log("Log - provider:", provider);
+  const { sdk, provider, chainId, account } = useSDK();
+  console.log("Log - account:", account);
 
   const connect = async () => {
     try {
-      const accounts = await sdk?.connect();
-      console.log("Log - accounts:", accounts);
-      setAccount(accounts?.[0]);
+      await sdk?.connect();
     } catch (err) {
       console.warn("failed to connect..", err);
     }
   };
   const disconnect = async () => {
     try {
-      await sdk?.disconnect();
-      setAccount("");
+      await sdk?.terminate();
     } catch (err) {
       console.warn("failed to connect..", err);
     }
@@ -45,50 +37,55 @@ export const App = () => {
       throw new Error(`invalid ethereum provider`);
     }
 
-
     provider
       .request({
-        method: 'wallet_addEthereumChain',
+        method: "wallet_addEthereumChain",
         params: [
           {
-            chainId: '0x221',
-            chainName: 'Flow testnet',
-            blockExplorerUrls: ['https://evm-testnet.flowscan.io'],
-            nativeCurrency: { symbol: 'FLOW', decimals: 18 },
-            rpcUrls: ['https://testnet.evm.nodes.onflow.org'],
+            chainId: "0x221",
+            chainName: "Flow testnet",
+            blockExplorerUrls: ["https://evm-testnet.flowscan.io"],
+            nativeCurrency: { symbol: "FLOW", decimals: 18 },
+            rpcUrls: ["https://testnet.evm.nodes.onflow.org"],
           },
         ],
       })
-      .then((res) => console.log('add', res))
-      .catch((e) => console.log('ADD ERR', e));
+      .then((res) => console.log("add", res))
+      .catch((e) => console.log("ADD ERR", e));
   };
 
-
   return (
-    <div className='App'>
-      <button style={{ padding: 10, margin: 10 }} onClick={connect}>
-        Connect
-      </button>
-      <button style={{ padding: 10, margin: 10 }} onClick={disconnect}>
-        Disconnect
-      </button>
-      <button style={{ padding: 10, margin: 10 }} onClick={addEthereumChain}>
-        Add chain Flow
-      </button>
-      {Number(chainId) !== 545 && (
-        <button style={{ padding: 10, margin: 10 }} onClick={() => changeNetwork("0x221")}>
-          Switch to FLOW network
+    <div className='flex justify-center items-center min-h-screen text-white flex-col'>
+      <div className='flex flex-col gap-4'>
+        <button
+          className='bg-green-900 rounded-md'
+          style={{ padding: 10, margin: 10 }}
+          onClick={account ? disconnect : connect}
+        >
+          {account ? "Disconnect" : "Connect"}
         </button>
-      )}
-      {connected && (
-        <div>
+
+        {account && (
           <>
-            {chainId && `Connected chain: ${chainId}`}
-            <p></p>
-            {account && `Connected account: ${account}`}
+            <button className='bg-green-900 rounded-md' style={{ padding: 10, margin: 10 }} onClick={addEthereumChain}>
+              Add chain Flow
+            </button>
+            {Number(chainId) !== 545 && (
+              <button
+                className='bg-green-900 rounded-md'
+                style={{ padding: 10, margin: 10 }}
+                onClick={() => changeNetwork("0x221")}
+              >
+                Switch to FLOW network
+              </button>
+            )}
+            <div className='flex flex-col justify-center items-center text-xl gap-2'>
+              <span>{chainId && `Connected chain: ${Number(chainId)}`}</span>
+              <span>{account && `Connected account: ${account}`}</span>
+            </div>
           </>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
