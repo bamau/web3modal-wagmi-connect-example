@@ -55,7 +55,7 @@ export const App = () => {
   };
 
   return (
-    <div className='flex justify-center items-center min-h-screen text-white flex-col'>
+    <div className='flex justify-center items-center min-h-screen text-white flex-col p-4'>
       <div className='flex flex-col gap-4'>
         <button
           className='bg-green-900 rounded-md'
@@ -79,9 +79,9 @@ export const App = () => {
                 Switch to FLOW network
               </button>
             )}
-            <div className='flex flex-col justify-center items-center text-xl gap-2'>
-              <span>{chainId && `Connected chain: ${Number(chainId)}`}</span>
-              <span>{account && `Connected account: ${account}`}</span>
+            <div className='flex flex-col justify-center items-center text-base gap-2'>
+              <span>{chainId && `Chain: ${Number(chainId)}`}</span>
+              <span>{account && `Connected: ${account.slice(0, 5) + "..." + account.slice(-5)}`}</span>
             </div>
           </>
         )}
